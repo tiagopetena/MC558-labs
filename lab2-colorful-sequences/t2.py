@@ -9,15 +9,8 @@
 # Find alternating Eulirian circuit
 # Every vertex has even degree 
 
-class Graph__aa(object):
-    def __init__(self, adj_list, adj_matrix, n_nodes) -> None:
-        self.adj_list = adj_list
-        self.adj_matrix = adj_matrix
-
-        self.pi = [None for _ in adj_list.list]
-        self.node_color = ["WHITE" for _ in adj_list.list]
-        self.n_nodes = n_nodes
-
+# import sys
+# sys.setrecursionlimit(200000)
 
 class Edge(object):
     def __init__(self, u, v, color) -> None:
@@ -64,6 +57,29 @@ class Graph(object):
             adj_string.append(f"{' '.join(map(str, adjs))}")
         return '\n'.join(adj_string)
 
+def DFS_non_recursive(G):
+    stack = []
+    u=0
+    stack.append(u)
+    last_color = None
+    while stack != []:
+        u = stack[-1]
+
+        if G.degrees[u] == 0:
+            G.circuit.append(u)
+            stack.pop()
+            continue
+
+        for v, edge_id in G.adj_list[u][::-1]:
+            if G.edges[edge_id].visited == False and G.edges[edge_id].color != last_color:
+                G.edges[edge_id].visited = True
+                last_color = G.edges[edge_id].color
+                G.degrees[u] -= 1
+                G.degrees[v] -= 1
+                stack.append(v)
+                break
+        if stack[-1] == u:
+            return None
 
 def DFS(G):
     DFS_visit(G, 0, None)
@@ -71,6 +87,7 @@ def DFS(G):
 
 def DFS_visit(G, u, last_color):
     for v, edge_id in G.adj_list[u]:
+        if G.degrees[u] == 0: break
         if G.edges[edge_id].visited == False and G.edges[edge_id].color != last_color:
             G.edges[edge_id].visited = True
             G.degrees[u] -= 1
@@ -89,9 +106,10 @@ def has_even_degrees(G):
 def has_colorful_trail(G):
     if not has_even_degrees(G):
         return None
-    DFS(G)
-    # print(*G.circuit)
+    DFS_non_recursive(G)
     if len(G.circuit) != G.n_edges + 1:
+        return None
+    if G.circuit[0] != G.circuit[-1]:
         return None
     return G.circuit
 
