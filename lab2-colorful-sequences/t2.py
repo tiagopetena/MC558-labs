@@ -58,25 +58,27 @@ class Graph(object):
         return '\n'.join(adj_string)
 
 def DFS_non_recursive(G):
-    stack = []
     u=0
-    stack.append(u)
-    last_color = None
+    stack = [u]
+    color_stack = [None]
     while stack != []:
         u = stack[-1]
+        last_color = color_stack[-1]
 
         if G.degrees[u] == 0:
             G.circuit.append(u)
             stack.pop()
+            color_stack.pop()
             continue
 
-        for v, edge_id in G.adj_list[u][::-1]:
+        for v, edge_id in G.adj_list[u]:
             if G.edges[edge_id].visited == False and G.edges[edge_id].color != last_color:
                 G.edges[edge_id].visited = True
-                last_color = G.edges[edge_id].color
+
                 G.degrees[u] -= 1
                 G.degrees[v] -= 1
                 stack.append(v)
+                color_stack.append(G.edges[edge_id].color)
                 break
         if stack[-1] == u:
             return None
@@ -96,6 +98,20 @@ def DFS_visit(G, u, last_color):
     G.circuit.append(u)
 
 
+def validate_colors(G):
+    edges_taken = []
+    
+    for i in range(0, len(G.circuit)-1):
+        edges_taken.append([G.circuit[i],G.circuit[i+1]])
+    colors = []
+    for i, edge_c in enumerate(edges_taken):
+        edge_key = f"{sorted(edge_c)}"
+        color = G.edges[edge_key].color
+        colors.append(color)
+        if i != 0:
+            if colors[-1] == colors[-2]:
+                print(f"INVALID TRASITION: {edge_c}: {color}")
+
 def has_even_degrees(G):
     for d in G.degrees:
         if d % 2 != 0:
@@ -111,6 +127,7 @@ def has_colorful_trail(G):
         return None
     if G.circuit[0] != G.circuit[-1]:
         return None
+    # validate_colors(G)
     return G.circuit
 
 
