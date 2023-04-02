@@ -9,16 +9,47 @@
 # Find alternating Eulirian circuit
 # Every vertex has even degree 
 
+class Graph__aa(object):
+    def __init__(self, adj_list, adj_matrix, n_nodes) -> None:
+        self.adj_list = adj_list
+        self.adj_matrix = adj_matrix
+
+        self.pi = [None for _ in adj_list.list]
+        self.node_color = ["WHITE" for _ in adj_list.list]
+        self.n_nodes = n_nodes
 
 
-class AdjList(object):
-    def __init__(self, n) -> None:
-        self.list = [[] for _ in range(0, n)]
+class Edge(object):
+    def __init__(self, u, v, color) -> None:
+        if color == 0:
+            self.color = 'BLUE'
+        else:
+            self.color = 'RED'
+
+        self.nodes = sorted([u, v])
+        self.id = f"{self.nodes}"
+        self.visited = False
+
+
+class Graph(object):
+    def __init__(self, n, m) -> None:
+        self.n_nodes = n
+        self.n_edges = m
+        self.adj_list = [[] for _ in range(0, n)]
         self.degrees = [0 for _ in range(0, n)]
+        self.edges = {}
+        self.circuit = []
 
-    def link(self, a, b):
-        self.list[a].append(b)
-        self.list[b].append(a)
+    def new_edge(self, u, v, color):
+        edge = Edge(u, v, color)
+        self.edges[edge.id] = edge
+        return edge
+
+    def link(self, a, b, color):
+        edge = self.new_edge(a, b, color)
+
+        self.adj_list[a].append((b, edge.id))
+        self.adj_list[b].append((a, edge.id))
 
         self.degrees[a] += 1
         self.degrees[b] += 1
@@ -28,47 +59,65 @@ class AdjList(object):
 
     def __str__(self) -> str:
         adj_string = []
-        for node in self.list:
+        for node in self.adj_list:
             adjs = sorted([a+1 for a in node])
             adj_string.append(f"{' '.join(map(str, adjs))}")
         return '\n'.join(adj_string)
 
-def has_even_degrees(adj_list):
-    for d in adj_list.degrees:
+
+def DFS(G):
+    DFS_visit(G, 0, None)
+
+
+def DFS_visit(G, u, last_color):
+    for v, edge_id in G.adj_list[u]:
+        if G.edges[edge_id].visited == False and G.edges[edge_id].color != last_color:
+            G.edges[edge_id].visited = True
+            G.degrees[u] -= 1
+            G.degrees[v] -= 1
+            DFS_visit(G, v, G.edges[edge_id].color)
+    G.circuit.append(u)
+
+
+def has_even_degrees(G):
+    for d in G.degrees:
         if d % 2 != 0:
             return False    
     return True
 
 
-def has_colorful_trail(adj_list):
-    if not has_even_degrees(adj_list):
+def has_colorful_trail(G):
+    if not has_even_degrees(G):
         return None
-    return ""
+    DFS(G)
+    # print(*G.circuit)
+    if len(G.circuit) != G.n_edges + 1:
+        return None
+    return G.circuit
 
 
 def parse_input():
 
     # First line - (1 < n <= 500)
     # Number of elements in sequence d
-    n_nodes, m_edges = map(int, input().split(' '))
+    n, m = map(int, input().split(' '))
+    G = Graph(n, m)
 
-    adj_list = AdjList(n_nodes)
-    degree_list = [0 for _ in range(0, n_nodes)]
-    for i in range(0, m_edges):
+    for i in range(0, m):
         u, v, c = map(int, input().split(' '))
+        G.link(u,v, c)
 
-        adj_list.link(u,v)
-    
-    return adj_list
+    return G
 
 
 def main():
-    adj_list = parse_input()
-    trail = has_colorful_trail(adj_list)
+    G = parse_input()
+    trail = has_colorful_trail(G)
 
     if trail == None:
         print("Não possui trilha Euleriana alternante")
-
+    else:
+        print(*trail)
 
 
 if __name__ == "__main__":
