@@ -86,7 +86,7 @@ def topological_ordering(G):
                 stack.append(v)
                 visited_all = False
         if visited_all:
-            ordering.insert(0, u)
+            ordering.append(u)
             stack.pop()
     print(ordering)
 
