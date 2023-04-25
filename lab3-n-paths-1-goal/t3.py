@@ -18,6 +18,10 @@ class Graph(object):
         adj_y = [[] for _ in range(0, n)]
         adj_r = [[] for _ in range(0, n)]
         self.adj_lists = [adj_g, adj_y, adj_r]
+        rev_adj_g = [[] for _ in range(0, n)]
+        rev_adj_y = [[] for _ in range(0, n)]
+        rev_adj_r = [[] for _ in range(0, n)]
+        self.rev_adj_lists = [rev_adj_g, rev_adj_y, rev_adj_r]
         self.in_degrees = [0 for _ in range(0, n)]
         self.out_degrees = [0 for _ in range(0, n)]
         self.edges = {}
@@ -35,6 +39,7 @@ class Graph(object):
     def link(self, a, b, color):
         edge = self.new_edge(a, b, color)
         self.adj_lists[color][a].append((b, edge.id))
+        self.rev_adj_lists[color][b].append((a, edge.id))
 
     def set_color(self, u, color):
         self.colors[u] = color
