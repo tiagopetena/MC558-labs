@@ -61,42 +61,102 @@ def topological_ordering(G):
     u = 0
     stack = [G.start]
     visited = [False for v in range(G.n_nodes)]
+    visited_adjs = [False for v in range(G.n_nodes)]
     ordering = []
     while stack != []:
-        visited_all = True
         u = stack[-1]
+        visited[u] = True
 
-        visited_all = True
+        if visited_adjs[u] == True:
+            stack.pop()
+            continue
+
+        added_edge = False
         # Green
         for v, edge_id in G.adj_lists[0][u]:
             if visited[v] == False:
-                visited[v] = True
                 stack.append(v)
-                visited_all = False
+                added_edge = True
         # Yellow
         for v, edge_id in G.adj_lists[1][u]:
             if visited[v] == False:
-                visited[v] = True
+                # visited[v] = True
                 stack.append(v)
-                visited_all = False
+                added_edge = True
         # Red
         for v, edge_id in G.adj_lists[2][u]:
             if visited[v] == False:
-                visited[v] = True
+                # visited[v] = True
                 stack.append(v)
-                visited_all = False
-        if visited_all:
-            ordering.append(u)
-            stack.pop()
-    print(ordering)
+                added_edge = True
 
+        if added_edge == False:
+            visited_adjs[u] = True
+            ordering.append(u)
+    
+    return ordering
+
+
+def path_count_recurrence(G, u):
+    n_paths = 0
+
+    # Green Paths
+    for v, edge_id in G.rev_adj_lists[0]:
+        if v == G.target:
+            pass
+        
+
+def count_paths(G, topological_order):
+    green_paths = [0 for _ in range(0, G.n_nodes)]
+    yellow_paths = [0 for _ in range(0, G.n_nodes)]
+    red_paths = [0 for _ in range(0, G.n_nodes)]
+
+    i = 0
+    u = topological_order[i]
+    while u != G.target:
+        green_paths[u] = 0
+        yellow_paths[u] = 0
+        red_paths[u] = 0
+        i += 1
+        if i > len(topological_order) - 1:
+            return [0 for _ in range(0, G.n_nodes)]
+        u = topological_order[i]
+
+    green_paths[u] = 0
+    yellow_paths[u] = 0
+    red_paths[u] = 0
+    i += 1
+    u = topological_order[i]
+
+    for i in range(i, len(topological_order)):
+        u = topological_order[i]
+        # Green Paths
+        for v, edge_id in G.adj_lists[0][u]:
+            if v == G.target:
+                green_paths[u] += 1
+            green_paths[u] += green_paths[v] + yellow_paths[v] + red_paths[v]
+        # Yellow Paths
+        for v, edge_id in G.adj_lists[1][u]:
+            if v == G.target:
+                yellow_paths[u] += 1
+            yellow_paths[u] += green_paths[v] + yellow_paths[v]
+        # Red Paths
+        for v, edge_id in G.adj_lists[2][u]:
+            if v == G.target:
+                red_paths[u] += 1
+            red_paths[u] += green_paths[v]
+        # i += 1
+    n_paths = [g + y + r for g, y, r in zip(green_paths, yellow_paths, red_paths)]
+    # print(n_paths)
+    # print()
+    return n_paths
 
 def parse_input():
-    n, m, s, t = map(int, input().split(" "))
+    n, m, s, t = map(int, input().split())
     G = Graph(n, m, s, t)
 
     for i in range(0, m):
-        u, v, c = map(int, input().split(" "))
+        u, v, c = map(int, input().split())
         G.link(u, v, c)
 
     return G
@@ -104,9 +164,13 @@ def parse_input():
 
 def main():
     G = parse_input()
-    print(G)
-    topological_ordering(G)
-
+    if G.target == G.start:
+        print(1)
+        return
+    # print(G)
+    topological_order = topological_ordering(G)
+    n_paths = count_paths(G, topological_order)
+    print(n_paths[G.start])
 
 if __name__ == "__main__":
     main()
