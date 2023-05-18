@@ -90,7 +90,7 @@ def get_minimum_cost_kruskal(G, k):
         if A.n_components == k:
             break
 
-    print(total_cost)
+    return total_cost
 
 def parse_input():
     n, m, k = map(int, input().split())
@@ -106,7 +106,8 @@ def parse_input():
 def main():
     G, k = parse_input()
 
-    get_minimum_cost_kruskal(G, k)
+    total_cost = get_minimum_cost_kruskal(G, k)
+    print(total_cost)
 
 
 if __name__ == "__main__":
