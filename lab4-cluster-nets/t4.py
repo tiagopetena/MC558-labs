@@ -1,8 +1,6 @@
 # Lab4 - Clusters - MC558 UNICAMP 1s2023
 # Tiago Petena RA187700
 
-DEBUG = True
-
 
 class DisjointSet(object):
     def __init__(self, n) -> None:
