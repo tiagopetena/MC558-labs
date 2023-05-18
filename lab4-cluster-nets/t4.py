@@ -61,7 +61,9 @@ class Graph(object):
         self.adj_list[b].append((a, edge.id))
 
     def sort_edges_by_weight(self):
-        self.edges = {k: v for k, v in sorted(self.edges.items(), key=lambda e: e[1].weight)}
+        self.edges = {
+            k: v for k, v in sorted(self.edges.items(), key=lambda e: e[1].weight)
+        }
         return self.edges
 
     def __str__(self) -> str:
@@ -82,13 +84,14 @@ def get_minimum_cost_kruskal(G, k):
         u, v = edge.nodes
 
         if A.find(u) != A.find(v):
-            A.union(u,v)
+            A.union(u, v)
             total_cost += edge.weight
 
         if A.n_components == k:
             break
 
     return total_cost
+
 
 def parse_input():
     n, m, k = map(int, input().split())
