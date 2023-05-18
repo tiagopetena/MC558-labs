@@ -3,16 +3,15 @@
 
 DEBUG = True
 
+
 class DisjointSet(object):
     def __init__(self, n) -> None:
         self._elements = [[] for _ in range(0, n)]
         self._parents = [[] for _ in range(0, n)]
-    
 
     def union(self, u, v):
-
         return
-    
+
     def find(self, v):
         x = v
         while x != self._parents[x]:
@@ -22,8 +21,6 @@ class DisjointSet(object):
             x = y
 
         return y
-        
-
 
 
 class Edge(object):
@@ -70,14 +67,13 @@ def parse_input():
         u, v, w = map(int, input().split())
         G.link(u, v, w)
 
-    if DEBUG: print(G)
+    if DEBUG:
+        print(G)
 
     return G, k
 
 
 def main():
-
-
     G = parse_input()
 
 
