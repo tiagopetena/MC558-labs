@@ -27,7 +27,6 @@ class DisjointSet(object):
     def find(self, v):
         x = v
         while x != self._parents[x]:
-            # path compression
             y = self._parents[x]
             self._parents[x] = self._parents[y]
             x = y
