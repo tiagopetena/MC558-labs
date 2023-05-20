@@ -48,11 +48,6 @@ def parse_input():
         u, v = map(int, input().split())
         G.link(u, v)
 
-    print(f"Rooms: {n}")
-    print(f"Doors: {m}")
-    print(f"Weights: {w}")
-    print(G)
-
     return G
 
 
@@ -74,7 +69,7 @@ def play_game(G):
             # Relax...
             if least_damage[u] + G.weights[v] < least_damage[v]:
                 least_damage[v] = -INF
-    print(least_damage)
+
     if least_damage[-1] < 100:
         is_playable = True
     else:
