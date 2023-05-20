@@ -1,7 +1,7 @@
 # Lab5 - MC558 UNICAMP 1s2023
 # Tiago Petena RA187700
 
-INF = 99999999999999
+INF = 9999999999999999999999999999
 
 class Edge(object):
     def __init__(self, u, v) -> None:
@@ -61,14 +61,16 @@ def play_game(G):
             u, v = e.nodes
             # Relax...
             if least_damage[u] - G.weights[v] < least_damage[v]:
-                least_damage[v] = least_damage[u] - G.weights[v]
+                if least_damage[u] - G.weights[v] < 100:
+                    least_damage[v] = least_damage[u] - G.weights[v]
 
     for i in range(G.n_nodes):
         for edge_id, e in G.edges.items():
             u, v = e.nodes
             # Relax...
             if least_damage[u] - G.weights[v] < least_damage[v]:
-                least_damage[v] = least_damage[u] - G.weights[v]
+                if least_damage[u] - G.weights[v] < 100:
+                    least_damage[v] = -INF
 
     if least_damage[-1] < 100:
         is_playable = True
