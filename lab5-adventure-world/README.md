@@ -1,22 +1,38 @@
-# Building clusters.
-Connect server clusters using the least amount of fiber cables.
+# Advenventure world
+
+Test some games. Decide which are possible to win or not.
 
 ## Input
 
-1st line
-N: Number of computers($9 \le N \le 10^{4}$).
-M: Number of conections($N - 1 \le M \le 10^{5}$).
-K: Number of clusters($1 \le K \le N$).
+Starting Points: 100
+Room Points ($w_i$): $-100 \le w_i \le 100$
 
-M lines:
-A: Computer 1.
-B: Computer 2 ($0 \le A,B \le N$).
-W: Conection cost($0 \le W \le 100$).
+Rooms($0 \le n \le n-1$)
+Spawn Room: $0$
+Final Room: $n - 1$
+$w_0=w_{n-1}=0$
+
+### 1st Line
+
+n: number of rooms
+
+### 2nd Line
+
+n integers($w_0, ... ,w_{n-1}$): $w_i$ energy of room $i$. $-100 \le w_i \le 100$.
+
+### 3rd Line
+
+m number of doors.
+
+### m Lines
+
+u v: door from u to v.
 
 ## Goal
 
-Connect server clusters using the least amount of fiber cables.
+Decide if you can reach target room without dying(reaching 0 energy).
+CAN REPEAT ROOMS.
 
 ## Output
 
-1 number: total cost.
+possible or impossible.
