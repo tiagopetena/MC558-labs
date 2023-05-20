@@ -3,64 +3,63 @@
 
 
 class Edge(object):
-    def __init__(self, u, v, w) -> None:
+    def __init__(self, u, v) -> None:
         self.nodes = (u, v)
-        self.weight = w
         self.id = f"{self.nodes}"
 
 
 class Graph(object):
-    def __init__(self, n, m) -> None:
+    def __init__(self, n, m, w) -> None:
         self.n_nodes = n
         self.n_edges = m
+        self.weights = w
         self.adj_list = [[] for _ in range(0, n)]
         self.in_degrees = [0 for _ in range(0, n)]
         self.out_degrees = [0 for _ in range(0, n)]
         self.edges = {}
 
-    def new_edge(self, u, v, w):
-        edge = Edge(u, v, w)
+    def new_edge(self, u, v):
+        edge = Edge(u, v)
         self.edges[edge.id] = edge
         self.out_degrees[u] += 1
         self.in_degrees[v] += 1
         return edge
 
-    def link(self, a, b, w):
-        edge = self.new_edge(a, b, w)
+    def link(self, a, b):
+        edge = self.new_edge(a, b)
         self.adj_list[a].append((b, edge.id))
-        self.adj_list[b].append((a, edge.id))
-
-    def sort_edges_by_weight(self):
-        self.edges = {
-            k: v for k, v in sorted(self.edges.items(), key=lambda e: e[1].weight)
-        }
-        return self.edges
 
     def __str__(self) -> str:
         adj_string = []
         for i, node in enumerate(self.adj_list):
             adjs = sorted([a[0] for a in node])
-            node_str = f"{i}"
+            node_str = f"{i}({self.weights[i]})"
             adj_string.append(node_str + f": {' '.join(map(str, adjs))}")
         return "\n".join(adj_string)
 
 
 def parse_input():
-    n, m, k = map(int, input().split())
-    G = Graph(n, m)
+    n = int(input())
+    w = list(map(int, input().split()))
+    m = int(input())
+    G = Graph(n, m, w)
+    for _ in range(0, m):
+        u, v = map(int, input().split())
+        G.link(u, v)
 
-    for i in range(0, m):
-        u, v, w = map(int, input().split())
-        G.link(u, v, w)
+    print(w)
+    print(f"Rooms: {n}")
+    print(f"Doors: {m}")
+    print(f"Weights: {w}")
+    print(G)
 
-    return G, k
+    return G
 
 
 def main():
-    G, k = parse_input()
+    G = parse_input()
 
-    total_cost = get_minimum_cost_kruskal(G, k)
-    print(total_cost)
+    # total_cost = get_minimum_cost_kruskal(G, k)
 
 
 if __name__ == "__main__":
