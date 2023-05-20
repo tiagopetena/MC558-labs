@@ -68,7 +68,7 @@ def play_game(G):
             u, v = e.nodes
             # Relax...
             if least_damage[u] - G.weights[v] < least_damage[v]:
-                least_damage[v] = -INF
+                least_damage[v] = least_damage[u] - G.weights[v]
 
     if least_damage[-1] < 100:
         is_playable = True
