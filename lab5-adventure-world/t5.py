@@ -1,6 +1,7 @@
 # Lab5 - MC558 UNICAMP 1s2023
 # Tiago Petena RA187700
 
+INF = 99999999999999
 
 class Edge(object):
     def __init__(self, u, v) -> None:
@@ -55,8 +56,41 @@ def parse_input():
     return G
 
 
+def play_game(G):
+    energy = 100
+    least_damage = [INF for _ in range(0, G.n_nodes)]
+    least_damage[0] = 0
+
+    for i in range(G.n_nodes):
+        for edge_id, e in G.edges.items():
+            u, v = e.nodes
+            # Relax...
+            if least_damage[u] + G.weights[v] < least_damage[v]:
+                least_damage[v] = least_damage[u] + G.weights[v]
+
+    for i in range(G.n_nodes):
+        for edge_id, e in G.edges.items():
+            u, v = e.nodes
+            # Relax...
+            if least_damage[u] + G.weights[v] < least_damage[v]:
+                least_damage[v] = -INF
+    print(least_damage)
+    if least_damage[-1] < 100:
+        is_playable = True
+    else:
+        is_playable = False
+
+    return is_playable
+
+
 def main():
     G = parse_input()
+
+    is_playable = play_game(G)
+    if is_playable:
+        print("possible")
+    else:
+        print("impossible")
 
 
 if __name__ == "__main__":
