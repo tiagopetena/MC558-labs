@@ -47,7 +47,6 @@ def parse_input():
         u, v = map(int, input().split())
         G.link(u, v)
 
-    print(w)
     print(f"Rooms: {n}")
     print(f"Doors: {m}")
     print(f"Weights: {w}")
@@ -58,8 +57,6 @@ def parse_input():
 
 def main():
     G = parse_input()
-
-    # total_cost = get_minimum_cost_kruskal(G, k)
 
 
 if __name__ == "__main__":
