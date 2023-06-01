@@ -11,6 +11,18 @@ $p_i$: weight
 $q_i$: stock.
 $Q$: exchange value.
 
+### 1st line
+
+$n$ $Q$
+
+### next n lines
+
+$v$ $p$ $q$
+
+$1 \le v \le min\{150, Q\}$
+$1 \le p \le 100$
+$1 \le q \le 3$
+
 ## Goal
 
 minimize:
