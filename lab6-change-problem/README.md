@@ -5,6 +5,7 @@ Coins still exist?
 Given exchange value; Give coins with minimum weight.
 
 ## Input
+
 n: coin kinds.
 $v_i$: value
 $p_i$: weight
