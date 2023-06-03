@@ -1,25 +1,35 @@
 #ifndef PATH_HPP
 #define PATH_HPP
 
-extern "C" {
-#include "shortest_path.h"
-}
+#include <ostream>
+#include <climits>
+#include <iostream>
+
+typedef struct arco { // nó da lista de adjacências
+    int u, v, peso;
+    struct arco *proximo;
+} Arco;
 
 using namespace std;
 
-class GrafoCPP {
-
-    Grafo *grafo;
+class Grafo {
 
     /* para facilitar seu debug */
-    friend ostream &operator<<(ostream &output, const GrafoCPP &p);
+    friend ostream &operator<<(ostream &output, const Grafo &p);
 
 public:
+    int n; // número de nós
+    int m; // tamanho do vetor de listas de adjacências
+    Arco **arcos; // vetor de lista de adjacências
+
     /* cria um novo grafo vazio */
-    GrafoCPP();
+    Grafo();
 
     /* cria um novo grafo com n vértices */
-    GrafoCPP(int n);
+    Grafo(int n);
+
+    /* destruidor */
+    ~Grafo();
 
     /* retorna o número de nós do grafo */
     int size();
