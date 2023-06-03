@@ -4,24 +4,22 @@
 
 using namespace std;
 
-
-int main() {
+int main()
+{
     int nKinds = 0;
     int totalCost = 0;
-
 
     // Parse input
     scanf("%d %d", &nKinds, &totalCost);
 
-    int* values = (int *) calloc(nKinds, sizeof(int *));
-    int* weights = (int *) calloc(nKinds, sizeof(int *));
-    int* quantities = (int *) calloc(nKinds, sizeof(int *));
+    int *values = (int *)calloc(nKinds, sizeof(int *));
+    int *weights = (int *)calloc(nKinds, sizeof(int *));
+    int *quantities = (int *)calloc(nKinds, sizeof(int *));
 
     for (int i = 0; i < nKinds; i++)
     {
-        scanf("%d %d %d", &values[i], &weights[i], &quantities[i]);    
+        scanf("%d %d %d", &values[i], &weights[i], &quantities[i]);
     }
-
 
     // Count total number of coins
     int nCoins = 0;
@@ -29,13 +27,11 @@ int main() {
     {
         nCoins += quantities[i];
     }
-    cout << nCoins << endl;
-
 
     // Consider all coins unique
     int coinIdx = 0;
-    int* allValues = (int *) calloc(nCoins, sizeof(int *));
-    int* allWeights = (int *) calloc(nCoins, sizeof(int *));
+    int *allValues = (int *)calloc(nCoins, sizeof(int *));
+    int *allWeights = (int *)calloc(nCoins, sizeof(int *));
     for (int i = 0; i < nKinds; i++)
     {
         for (int c = 0; c < quantities[i]; c++)
@@ -48,7 +44,6 @@ int main() {
 
     // Create Graph
     int n_vertices = nCoins * (totalCost + 1) + 2;
-    cout << "n_vertices: " << n_vertices << endl;
     int s = n_vertices - 1;
     int t = n_vertices - 2;
     GrafoCPP g(n_vertices);
@@ -70,13 +65,27 @@ int main() {
 
     g.adicionaArco(s, 0, 0);
     g.adicionaArco(s, allValues[0], allWeights[0]);
-    g.adicionaArco((nCoins) * (totalCost + 1) - 1, t, 0);
-
-    cout << "Grafo gerado:" << endl;
-    // cout << g;
+    int targetCostNode = (nCoins) * (totalCost + 1) - 1;
+    g.adicionaArco(targetCostNode, t, 0);
 
     int *dist = g.caminhoMinimo(s, t);
-    cout << "Distância mínima entre " << s << " e " << t << " " << dist[t] << endl;
+    if (dist[t] < INT_MAX)
+    {
+        cout << dist[t] << endl;
+    }
+    else
+    {
+
+        for (int l = 1; l <= totalCost; l++)
+        {
+            int resultCost = targetCostNode - l;
+            if (dist[resultCost] < INT_MAX)
+            {
+                cout << (totalCost - l) << " " << dist[resultCost] << endl;
+                break;
+            }
+        }
+    }
 
     return 0;
 }
