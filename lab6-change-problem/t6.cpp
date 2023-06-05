@@ -11,60 +11,51 @@ int main()
     // Parse input
     scanf("%d %d", &nKinds, &totalCost);
 
-    int *values = (int *)calloc(nKinds, sizeof(int *));
-    int *weights = (int *)calloc(nKinds, sizeof(int *));
-    int *quantities = (int *)calloc(nKinds, sizeof(int *));
+    int *values = (int *)malloc(nKinds * sizeof(int *));
+    int *weights = (int *)malloc(nKinds * sizeof(int *));
+    int *quantities = (int *)malloc(nKinds * sizeof(int *));
 
     for (int i = 0; i < nKinds; i++)
     {
         scanf("%d %d %d", &values[i], &weights[i], &quantities[i]);
     }
 
-    // Count total number of coins
-    int nCoins = 0;
-    for (int i = 0; i < nKinds; i++)
-    {
-        nCoins += quantities[i];
-    }
-
-    // Consider all coins unique
-    int coinIdx = 0;
-    int *allValues = (int *)calloc(nCoins, sizeof(int *));
-    int *allWeights = (int *)calloc(nCoins, sizeof(int *));
-    for (int i = 0; i < nKinds; i++)
-    {
-        for (int c = 0; c < quantities[i]; c++)
-        {
-            allValues[coinIdx] = values[i];
-            allWeights[coinIdx] = weights[i];
-            coinIdx++;
-        }
-    }
-
     // Create Graph
-    int n_vertices = nCoins * (totalCost + 1) + 2;
+    int n_vertices = nKinds * (totalCost + 1) + 2;
     int s = n_vertices - 1;
     int t = n_vertices - 2;
     Grafo g(n_vertices);
 
-    for (int c = nCoins - 1; c > 0; c--)
+    for (int c = nKinds - 1; c > 0; c--)
     {
         for (int l = 0; l <= totalCost; l++)
         {
             int vertexIdx = ((c * (totalCost + 1))) + l;
 
             g.adicionaArco(vertexIdx - (totalCost + 1), vertexIdx, 0);
-
-            if (l - allValues[c] >= 0)
+            for (int q = 1; q <= quantities[c]; q++)
             {
-                g.adicionaArco(vertexIdx - (totalCost + 1) - allValues[c], vertexIdx, allWeights[c]);
+                if (l - (q*values[c]) >= 0)
+                {
+                    g.adicionaArco(vertexIdx - (totalCost + 1) - (q*values[c]), vertexIdx, q*weights[c]);
+                }
+                else
+                {
+                    break;
+                }
             }
         }
     }
 
     g.adicionaArco(s, 0, 0);
-    g.adicionaArco(s, allValues[0], allWeights[0]);
-    int targetCostNode = (nCoins) * (totalCost + 1) - 1;
+    for (int q = 1; q <= quantities[0]; q++)
+        {
+            if (q*values[0] >= 0)
+            {
+                g.adicionaArco(s, q*values[0], q*weights[0]);
+            }
+        }
+    int targetCostNode = (nKinds) * (totalCost + 1) - 1;
     g.adicionaArco(targetCostNode, t, 0);
 
     int *dist = g.caminhoMinimo(s, t);
@@ -86,12 +77,9 @@ int main()
         }
     }
 
-    free(dist);
-    free(values);
-    free(weights);
-    free(quantities);
-    free(allValues);
-    free(allWeights);
+    // free(values);
+    // free(weights);
+    // free(quantities);
 
     return 0;
 }
