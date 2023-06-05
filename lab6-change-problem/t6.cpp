@@ -45,7 +45,7 @@ int main()
     int n_vertices = nCoins * (totalCost + 1) + 2;
     int s = n_vertices - 1;
     int t = n_vertices - 2;
-    GrafoCPP g(n_vertices);
+    Grafo g(n_vertices);
 
     for (int c = nCoins - 1; c > 0; c--)
     {
@@ -85,6 +85,13 @@ int main()
             }
         }
     }
+
+    free(dist);
+    free(values);
+    free(weights);
+    free(quantities);
+    free(allValues);
+    free(allWeights);
 
     return 0;
 }
